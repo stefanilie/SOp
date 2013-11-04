@@ -24,14 +24,14 @@ void main(int argc, char *argv[])
 {
 	int nNumber, nBackup = 0, i=0;
 	struct prim objPrime;
-	//char *moloz, *endptr; 
+	char *moloz, *endptr; 
 
-//	moloz = argv[1];
+	moloz = argv[1];
 
-//	nNumber = strtol(moloz, &endptr, 10);
+	nNumber = strtol(moloz, &endptr, 10);
 
-	printf("Insert numeber:");
-	scanf("%d", &nNumber);
+//	printf("Insert numeber:");
+//	scanf("%d", &nNumber);
 	nBackup = nNumber;
 
 	if (isPrime(nNumber)==1)

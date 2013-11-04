@@ -1,0 +1,161 @@
+//ce este mai jos nu e cod, e pseudocod.
+
+while (1)
+{
+	parse_command();  //asteapta sa scirem ceva la tastatura si dupa ce dam enter se executa
+
+	if((pid == fork()) == 0)
+	{
+		execvp(exe, argv);
+	}
+	else 
+	{
+		wait(NULL);
+	}
+}
+
+/*tata*/
+-asteapta executarea fiului si a procesului de retur al acestuia. Face asta prin
+int wait( int *stare) //in stare se pune codul de retur al procesului fiu
+-1 in caz de eroare ECHLD
+>0 pid proces zombie (a ajuns in stare zombie, s-a terminat)
+wait comparabil cu ingroparea. procesu de cand e in rulare pana ajunge in wait e precum mortu e catafalc \
+care asteapta sa fie bagat in pamant(wait)
+
+
+despre stare
+------------
+int *stare;
+wait(stare);
+---------------->greseala grava (pointerul neintializat) DUCE LA DEPUNCTARE!!! 50 de sutimi din 200
+
+int *stare;
+stare = (int *) malloc(sizeof(int));
+wait(stare);
+------------------> acum e initializat DAR mallocul consuma resurse, nu ai facut free =>depunctare mai mica
+
+int stare;
+wait(&stare);
+----------------->corect
+
+wait(NULL);
+
+
+
+
+#define MAX(I, J); (I)<(J) ? (J):(I)
+deci daca vom avea:
+MAX(a+2, b+c) // va insemna a+2<b+c? b+c:a+2;
+
+
+macro-uri
+---------
+
+WIFEXITED(stare) 
+-returneza true sa false
+-spune daca procesul s-a terminat in 
+
+WEXITSTATUS(stare)
+
+
+if(WIFEXITED(stare))
+	rc = WEXITSTATUS(stare);
+
+
+WIFSIGNALED(stare)
+-daca procesul s-a terminat dupa primirea unui semnal
+
+WTERMSIG(stare)
+-ce semnal a fost.
+
+
+int waitpid(int pid, int *stare, int opt)
+->pricum argument este pidul procesului pe care vrem sa il astepatm
+	pid>0 - daca nu avem nici un fiu avem eroare pt ca el asteapta copil
+	pid = -1 -astept pe orice copil chiar daca e zombie state
+
+->opt
+	- 0 inseamna ca nu am nici o optiune
+opt WNOHANG - daca ma pune in asteptare pid-u, sa nu raman in asteptare 
+codul de return este -1 si errno = EAGAIN;
+
+opt WUNTRACED - astept dupa procesul zombie, si/sau dupa proces stopat.
+
+WIFSTOPPED(stare);			  
+- daca a intrat in stare stopat
+
+WSTOPSIG(stare)
+- 
+
+
+Primitivele din familia exec
+----------------------------
+int execl(char *exe, char *arg(), char *arg1,..., char *argn, NULL)
+
+execl("/bin/ls(cu cale completa)", "ls", "-l", NULL);
+
+int execlp(char *exe, char *arg(), char *arg1,..., char *argn, NULL)
+-nu mai trebuie sa dam cale completa la exe la fel ca le "execl"
+-pentru ca cauta in path.
+
+
+export PATH=.:$PATH;
+
+int execle(char *exe, char *arg(), char *arg1,..., char *argn, NULL, char **arge)
+-**arge suprascriu enviromentul
+-trebuie construit inainte de apel cu o lista de pointeri
+
+int execvp(char *exe, char **argv)
+
+int execve(char *exe, char **argv, char **arge);
+
+
+
+Comunicare intre procese
+------------------------
+1. nativa(nerecomandat).
+-ex: 2 procese care scriu in 2 fisere. a modifica un fisier care urmeaza a fi citit de b
+	poate duce la inconsistenta.
+
+2. fisere de tip special
+	-pipe : un proces scrie, un proces citeste
+
+	-socket: la fel ca piperuile dar comunicarea e bidirectionala
+			nu sunt neaparat pe aceeasi masina. 
+
+3. IPC inter processed communication
+IPC System V - cozi de mesaje, vectori de semafoare, zone de memorie partajata
+
+4. semnale
+	-stdin 0
+	-stdout descriptor 1
+	-stder care are descriptor 2
+
+$sort < f
+
+$sort >f mai mare cu trunchere
+
+$sort >>f dublu mai mare cu append
+
+$sort 2>f 
+
+$sort <f>>g
+
+$c1|c2|...|cn <---- execuatare multipla a mai multor procese.
+-outputul unui proces este inputul procesului care urmaza;
+
+
+
+IPC SYSTEM V
+------------
+se pot vedea cu comanda $ipcs
+- ce cozi de mesaje sunt, ce semafoare sunt etc
+
+caracteristici comune:
+fiecare ipc are un identificator intern, ie: memorat de un numar, si un identificator extern.
+
+key_t ftok(char *f, int val)
+f trebuie sa fie numele unui fisier existent pe disc.
+ftok se uita pe disc, ii ia numarul ascuns si din numarul construieste 
+
+ 
