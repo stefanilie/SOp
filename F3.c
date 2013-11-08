@@ -20,21 +20,31 @@ int isPrime(int x)
 	return 1;
 }
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int nNumber, nBackup = 0, i=0;
 	struct prim objPrime;
 	char *moloz, *endptr; 
 
+	if(argc != 2)
+	{
+		fprintf(stderr, "Utilizare: %s numar\n", argv[0]);
+		return 1;
+	}
+
 	moloz = argv[1];
 
 	nNumber = strtol(moloz, &endptr, 10);
+	if(*endptr)
+	{
+		fprintf(stderr, "%s nu este numar intreg\n", argv[1]);
+		return 1;
+	}
 
-//	printf("Insert numeber:");
-//	scanf("%d", &nNumber);
+
 	nBackup = nNumber;
 
-	if (isPrime(nNumber)==1)
+	if (isPrime(nNumber) == 1)
 	{
 		printf("\n\n");
 		printf("Numarul este prim! :");
@@ -45,38 +55,36 @@ void main(int argc, char *argv[])
 	{
 		for(i=2; i<nBackup; i++)
 		{
-			if(isPrime(i))
+			objPrime.nNumber = i;
+			objPrime.nPower = 0;
+			while (nNumber != 1)
 			{
-				objPrime.nNumber = i;
-				objPrime.nPower = 0;
-				while (nNumber != 1)
+				if(nNumber % objPrime.nNumber == 0)
 				{
-					if(nNumber % objPrime.nNumber == 0)
+					while(nNumber % objPrime.nNumber == 0)
 					{
-						while(nNumber % objPrime.nNumber == 0)
-						{
-							nNumber = nNumber / objPrime.nNumber;
-							objPrime.nPower ++;
-						}
-						printf("%d", objPrime.nNumber);
-						if(objPrime.nPower != 1)
-						{
-							printf("^");
-							printf("%d", objPrime.nPower);
-							if(nNumber != 1)
-								printf(" * ");
-						}
-						else 
-						{
-							if(nNumber != 1)
-								printf(" * ");
-						}
+						nNumber = nNumber / objPrime.nNumber;
+						objPrime.nPower ++;
 					}
-					else break;
+					printf("%d", objPrime.nNumber);
+					if(objPrime.nPower != 1)
+					{
+						printf("^");
+						printf("%d", objPrime.nPower);
+						if(nNumber != 1)
+							printf(" * ");
+					}
+					else 
+					{
+						if(nNumber != 1)
+							printf(" * ");
+					}
 				}
+				else break;
 			}
 		}
 	}
 	printf("\n\n");
+	return 0;
 }
 
