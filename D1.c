@@ -45,7 +45,22 @@ int read_dir(char *pth)
 				space[i] = '-';
 		}  
         printf("%s\n",space);*/
-        if(ok==0)
+        if(stat(newp,&buf)==-1)
+        perror("stat");
+        if(ok==0 && S_ISDIR(buf.st_mode))
+        {
+           	int i=0;
+        	for(i=0; i<strlen(newp); i = i+2)
+        	{
+        		if(i==0)
+        			printf("|");
+        		else 
+        			printf("-");
+        	}
+
+        	printf("%s\n", file->d_name);
+        }
+        else if(ok == 0)
         {
         	printf("%s\n", newp);
 
@@ -54,10 +69,10 @@ int read_dir(char *pth)
         else
         {
         	int i=0;
-        	for(i=0; i<strlen(newp); i++)
+        	for(i=0; i<strlen(newp); i = i+2)
         	{
         		if(i==0)
-        			printf("\n|");
+        			printf("|");
         		else 
         			printf("-");
         	}
@@ -67,8 +82,6 @@ int read_dir(char *pth)
        // printf("%s\n", newp);
             //stat function return a structure
             // of information about the file    
-        if(stat(newp,&buf)==-1)
-        perror("stat");
         if(S_ISDIR(buf.st_mode))// if directory, then 
             //add a "/" to current path
         {
