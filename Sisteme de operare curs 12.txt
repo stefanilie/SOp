@@ -1,0 +1,68 @@
+CURS 12
+-------
+
+Retea
+-----
+In retea pot sa comunice aplicatii, care sa ruleze pe masini complet diferit.
+In vederea rularii aplicatiei pe mai multe sisteme indiferent de OS.
+
+Norma OSI
+---------
+(normele sunt organizate pe nivele, si ideea e ca de la un nivel anume se pot apela orice facilitati de la nivelele anterioare, dar din cele inferioare nu se poate apela din cele de niv superior)
+
+Norma OSI e organizata pe 7 nivele:
+
+-mesajul e creat de emitator, se scurge pana la receptor si apoi urca inapoi la emitator.
+
+Nivelele:
+7. Aplicatie
+6. Prezentare
+-face o functie de serializare.
+transforma mesajul trimis de aplicatie intr-un format universal, serializat, iar cel ce primeste
+ia face deserializare si citeste mesajul;
+Exemplu de format(protocol): XDR;
+
+5. Sesiune
+4. Transport (obligatoriu)
+-ultimul nivel la care are acces devul
+-aici sunt socketii
+	->sunt de 2 feluri:
+		=>TCP(transport comm protocol) trimit octet cu octet, n octeti
+		=>UDP(User data-gram protocol) acctioneaza ca cozile de mesaje(data gram) 
+		si le citeste printr-o functie de citire
+3. Retea 
+- "calculeaza" ruta pe care trbebuie sa o ia mesajul, urmatoarea destinatie
+
+2. Control de date.
+1. Fizic
+- cu fir sau fara fir
+
+RPC(Remote Procedure Call)
+
+DNS(Domain Name Server)
+
+SMTP
+
+Telnet(SSH)
+
+FTP(SFTP)
+	
+Baze de date, arh client-server
+-------------------------------
+1)
+Oracle
+SYBASE(MSSQL)
+DB2 
+POSTGRES
+INGRES
+INFORMIX
+
+Toate folosesc SQL (Standard Query Language)
+
+2)
+www
+clientul este de obicei numit "Browser"
+Serverul se numeste webServer
+
+
+

@@ -1,0 +1,171 @@
+CURS 6
+------
+
+int *x = NULL; //null ca sa fiu sigur ca primesc sgisegv, si nu pinteaza catre garbage;
+*x = 55 <= primesc sigsegv
+
+SIGSEGV: The SIGSEGV signal is sent to a process when it makes an invalid virtual memory reference, or segmentation fault, i.e. when it performs a segmentation violation.
+
+setjump.h
+
+sigjmp_buf => memoreaza un context de proces - unde a ajuns program countertru.. etc
+
+int sigsetjmp(sigjmp_buf context, int opt) - memoreaza in primu argument contextul 
+										   - codul de retur e 0(dar nu intotdeauna);
+
+int siglongjmp(sigjmp_buf context, int val)
+-context este cel memorat in sigsetjmp
+-LA EXAMEN CINE FOLOSESTE VARIABILA GLOBALA ESTE DEPUNCTAT!!!!
+-doar aici e voie sa folosim var globala
+-siglongjump se intoarce in "burta" programului care face sigsetjmp si trimite inapoi in sigsetjmp.
+-fie prin contextul programului fie datorita unei erori se sare in sigsetjmp();
+
+---------------------------
+int returnCode;
+
+returnCode = sigsetjmp(context, 0); //practic am fotografiat contextul de proces;
+switch(returnCode)
+{	
+//cazul normal. am initializat.
+	case 0;
+	break;
+
+	case1:
+	/* SIGSEGV */
+
+	case 2:
+	/* SIGILL*/
+
+	case 3:
+	/* SIGBUS */
+wdasda
+}
+
+/* Afisare meniu */
+
+FIRE DE EXECUTIE (THREAD)
+-------------------------
+
+biblioteca de threaduri in unix: pkthread
+
+mau multe fire de executie in cadrul unui singur proces, 
+partajeaza variabilele globale
+
+Deadlock
+--------
+
+presupune ca un proces poate acapara o resursa in mod exclusiv
+exemplu: cabina de toaleta. folosinta exclusiva. nu poate ocupa mai multe ci doar una singura, si cabina ocupata ramane asa pana e eliberata.
+
+scenariu:
+avem 2 procese p1, p2, si doua resurse r1, r2
+
+p1 <- r1;
+p2 <- r2;
+p1 <- r2 (il vrea pe r2, dar r2 e a lui p2 => asteapta dupa p2)
+
+p2 <- r1 ( p2 il vrea pe r1, => asteapta pe p1 => avem 2 procese care se afla in sleeping pt ca ambele asteapta unu pe celalalt)
+- in acest moment deadlockul observa ca cele 2 sunt blocate si intra in rol.
+- intra si unul dintre pocese este victima, si resursele lui sunt eliberate
+- daca l-am ales pe p1 sa eliminam, p2 a muncit mult. p1 a muncit f putin. deci procesul victima trebuie sa reia de la capat procesul. deci daca unul a muncit 1 ora si unu 3 minute, se alege cel de 3 pt ca are mai putin de recuperat cu munca.
+-citerii in fct de resursele consumate, cat il costa pe unu sau pe altu sa isi reia munca, si e luat ala mai eficient
+
+EDEADLCK
+
+deadlock-u poate fi direct sau indirect;
+cel de sus este exemplu de deadlock direct
+
+
+deadlock indirect:
+p1<- p2 <- p3  <- p4 <-....<- Pn <- p1 //toti asteapta dupa cineva
+
+
+Metode de prevenire
+-------------------
+
+probleme clasice de concurenta
+------------------------------
+
+1.Producator - Consumator
+
+se creaza un buffer cicular in care scrie date unele dupa celelalte
+producatorul isi face traba pana ajunge in zona consumatorului.
+sau consumatorul isi face treaba si il ajunge din urma pe producator care asteapta buffer plin iar consumatorul buffer gol.
+
+exemplu:!!!!semi-speudo-cod!!!
+
+#define n100
+int count = 0;
+void producer()
+{
+	int item;
+	while(TRUE)
+	{
+		item  = produce_item();
+		if(count == N) //bufferu e plin sau cate elemente sau produs si sunt in buffer
+			sleep();
+
+		insert_item(item); // insereaza sau scrie in bufffer
+		count ++;
+		if(count == 1)
+			wakeup(consumer);
+	}
+}
+
+void costumer()
+{
+	int item;
+	while(TRUE)
+	{
+		if(count == 0)
+			sleep();
+		item = remove_item();
+		count --;
+
+		if(count == N -1)
+			wakeup(producer);
+	}
+}
+
+---------------------------------------------------------------------------------------------------
+solutia corecta este cu semafoare:
+
+#define N 100;
+typedef int semaphore;
+semaphore mutex = 1;
+semaphore empty = N;
+semaphore full = 0;
+void producer()
+{
+	int item;
+	while (TRUE)
+	{
+		item = produce_item();
+		down(empty);
+		down(mutex);
+		inert_item(item);
+		up(mutex);
+		up(full);
+	}
+}
+void consumer()
+{
+	int item;
+	while(TRUE)
+	{
+		down(full);
+		down(mutex);
+		item = remove_item();
+		up(mutex);
+		up(empty);
+	}
+}
+
+
+Problema celor 5 filozofi
+-------------------------
+filozofii sunt asezati in jurul unei mese.
+fiecare filozof are o shaorma in fata
+intre fiecare filozof are tacamuri
+daca cel putin unul dintre cele 2 sunt ocupate, trebuie sa astepte pana cele 2 sunt libere
+

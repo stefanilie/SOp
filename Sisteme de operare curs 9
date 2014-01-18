@@ -1,0 +1,63 @@
+CURS 9
+======
+
+tipuri de acces de date:
+-secvential
+-aleator
+-secvential indexat (nu e implementat nativ)
+	=> nume, prenume, adresa
+	=>.dat .idx
+
+Organizarea pe disc
+-------------------
+
+FAT - file alocation table
+	=>e o zona compacta care are la finalul ei un pointer catre continuarea ei (exemplu cu .docu care scrii initail 10 pagini si dupa continui dupa o saptamana)
+NTFS
+
+Fiecare disc fizic are o tabela de I-Noduri
+=>identificatorul unic al fisierului este fomat din numarul de disk(pe ce disk este) si numarul de inod
+=>directoarele sunt organizate in arborescente. In unix este o singura arborescenta
+
+Pointeri catre zona de date
+
+Tipul fisierului
+	=>obisnuit(regular files)
+	=>director(in unix este o particularizare de fisier
+		->sunt inregistrari care au 2 campuri: Numele intrarii in director care este unic
+											   numarul de disk + numar inod
+		->un director se creaza cu comanda 'mkdir nume' 
+			--> are 2 intrari: . si ..
+				---> . contine numarul de inod al fisierului director
+				---> .. contine numarul de inod al fisierului director parinte
+		-> stergerea se face cu 'rmdir nume'
+			--> reuseste numai daca directorul este gol si contine numai cele 2 intrari
+			--> esueaza daca are fisiere in el. pt asta se sterg cu rm si numele fisierului
+			--> rm -r sterge recursiv
+			--> rm -r/
+	=> asociate perifericelor
+		->de tip caracter c
+		->de tip bloc b
+	=> legatura simbolica
+	=>de tip tub(pipe)
+	=> socketul (bidirectional))
+Drepturi de acces
+-----------------
+	-propietar
+	-grup propietar
+	-ceilalti
+rwx - read write execute	
+rw-r-r- propietarul are drept de read write, cei din grupul proprietar aru read si other au read
+	exemplu:
+	propietarul poate schimba drepturile de acces, chmod 046
+	set uid inseamna ca drepturile de acces la fisier sunt ale propietarului executabilului
+
+	passwd schimbi parola (dupa ce te-ai logat)
+
+	set gid 
+	sticky
+		-propietar
+		-grup propietar
+	chown
+		-numarul de legaturi fizice
+	ln sortare.c aaabbb - in director e o intrare cu nume nou, doar care are aceeasi numar de inod

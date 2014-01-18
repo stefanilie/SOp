@@ -1,0 +1,139 @@
+Sisteme de operare curs 4.
+--------------------------
+
+toate tipurile de IPCuri poseda un apel de forma 
+xxxget - pornind de la o cheie externa furnizaeaza cheia interna
+xxxclt - apel de control
+
+pe langa ele , fiecare tip pe ipc are apeluri specifice de exploatare
+Cozi de mesaj
+-------------
+int msgget(key_t cheie, int opt)
+	-in caz de succes returneaza identificatorul intern al cozi de mesaj, deci >0
+	-caz negativ -1
+	-cheia poate fii recuperata cu ftok sau poa sa mai aibe IPC_PRIVATE
+daca in loc de cheie punem IPC_PRIVATE=> se formeaza un ipc nou, disponibil doar pt procesul creator sau pt descendentii directi/indirecti ai
+acestuia
+dupa ce e folosit de ei, ipcul creat se sterge
+
+optiuni (opt)
+-------------
+daca nu avem punem 0
+se creaza prin disjunctie cu sau logic (bit cu bit) intre urmatoarele instructiuni
+opt IPC_CREAT - daca nu exista creezi, daca exista il deschizi
+opt IPC_EXCL are efect numai in prezenta lui ipc_creat
+		-vrea exclusiv creere. nu merge daca exista.0666 acces la fisierele create
+
+
+ENOENT, EEXIST
+
+
+Coada de mesaj fct ca o cutie postala
+	apelul care permite trimiterea mesajului este 
+	int msgsnd(int id, void *p, int lg, int opt)
+	id- idu recuperat de msgget
+	*p- adresa din memorie unde e mesajul
+	lg - lungimea mesajului (se da cu sizeof)
+	0 in caz de esec, 1 in caz de succes
+
+
+cazuri posibile de insucces :
+-cand idu nu e recuperat de msgget;
+
+opt - IPC_NOWAIT (daca nu exita mesaj, nu lasa coada sa se blocheze)
+
+in *p definim o structura care baga mesaje in coada;
+mesajul tre sa inceapa cu un camp 
+unsigned long typ; care reprezinta tipul mesajului;
+atunci lg este sizeof structura-sizeof long
+campurile structurii nu trebuie sa aibe pointeri!!
+
+
+msgrcv(int id, void *p, int lg, long tip, int opt)
+permite extragerea de mesaj din coada
+-tip: daca e >0 adtunci se ia cel mai vechi mesaj cu tipul specificat
+	  daca nu exista tipul ala in coada, ramane blocat
+
+	  tip = 0 ia cel mai vechi mesaj indiferent de structura
+
+	  tip < 0 = ia cel mai vechi mesaj de tipul modul de tip;
+
+-opt: IPC_NOWAIT, MSG_NOERROR
+
+int msgctl(int id, int op, struct msqid_ds *p)
+-op are o valuare data cu define.op IPC_STAT
+IPC_SET - se pot modifica 
+deci, luam structura cu ipc_stat, modificam cu IPC_SET
+
+IPC_RMID - al treilea argument nu mai are importanta
+
+
+Vectorii de semafoare
+---------------------
+gandita de Dijkstra 
+obiecte in sistemul de operare
+in mintea noastra, niste numere >=0;
+se pot face operatii asupra lor:
+HIGH(s) = incrementarea numarului;
+LOW(s) = decrementare;
+
+exemlu de semafor:
+mutex - are valori doar intre 0 si 1;
+
+
+apeluri specifice ale semoafoarelor
+-----------------------------------
+int semget(key_t cheie, int nr, int opt)
+-cheie ori recupereata cu ftok fie e ipc_private
+-nr susceptibil de a crea ipc nou; spune cate semafoare. 
+-opt
+
+apelurile de exploatare
+struct sembuf(descrie o operatie asupra unui semafor atomic)
+{
+	unsigned short sem_num; //pe al catelea semafor atomic fac operatie
+	short sem_op; // ce operatie fac asupra semaforului; >0 neblocant, <0 decrementare ma baga in asteteptare, =0 astept ca semaforu sa ajunga pe 0
+	short sem_flg; //IPC_NOWAIT
+
+}
+
+int semop(int id, struct sembuf *tab, int nr) //functie care arbritreaza procesele
+-in tab sunt semafoarele;
+-facem cu el si intrementari si decrementari, tot
+
+int semctl(int id, int num, int op, ...)
+IPC_STAT    struct *semid_ds;
+IPC_SET
+IPC_RMID
+GETVAL -returneaza in caz de succes valoarea semaforului
+SETVAL - fortez valoarea semaorului
+GETALL -  recuperez valorile tuturor semafoarelor
+
+
+Segmente de memorie partajata
+-----------------------------
+
+int shmget(key_t cheie, int dim, int opt // opt la fel ca celelalte)
+
+void shmadd *(int id, void *adr, int opt) //atasare
+obligatoriu al doilea argument e null. Acela hotaraste la ce adresa la care se gaseste
+optiuni:
+SHM_READONLY
+
+int shmdt(void *adr)  //detasarea
+adr = ce am recuperat de la shmadd
+
+Semnale
+-------
+signal.h - defineste printre altele niste constante:
+NSIG - nr de semnale disponibile
+
+in signal.h fiecare semnal e dat in 
+#define SIGCONT 6
+#define SIGKILL 9
+
+la primirea unui semnal se comporta la fel ca la intreruperi
+dupa primirea semnalului, procesul intra in kernel mode, care va executa o rutina numinta handlerul semnalului
+fiecare semnal poseda propia lui rutina handler
+asta e comportamentul implicit
+daca handlerul se termina cu return , executa return, se intoarce in kernel mode.

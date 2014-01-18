@@ -1,0 +1,94 @@
+Curs 10 sisteme de operare
+--------------------------
+
+ln -s x y
+x->y
+rm y
+ln x z
+
+-dimensiunea in octeti
+-data ultimei modificari
+-alte date
+	=>data creeri fisierului, sau data ultimei modificari
+
+APELURI SISTEM
+--------------	
+
+-ca sa recuperam 
+int stat(int *fis, struct *st)
+
+struct stat st;
+stat("abcde", &st);
+st_node
+st_node & _S_IFDIR
+S_ISDIR(st, st_node)
+
+lstat(char *fis, struct stat *st)
+	=>descrie inodul legturii simbolice, nu al destinatiei
+
+-tabela de descriptori
+-tabela de fisiere dechise in memorie
+
+
+tabela de i-noduri din memeorie
+-------------------------------
+
+-fiecare intrare pointeaza pe tabela de fisiere deschise in memorie
+-contine o sg intrare pt un inod
+
+apeluri sistem pentru acces fisiere
+-----------------------------------
+
+int open(char *nume, int mod, int dr)
+-primesc numarul noii intrari in tabela de descriptori
+-una si numai una dintre O_RDONLY, O_RDWR, 
+-se mai pot baga si alte optiuni
+-O_CREAT
+-O_EXCL
+-O_TRUNC-daca fisierul deschis exista, continutul se va trunchia
+-O_APPEND
+-"r" O_RDONLY
+-"w" O_WRONLY|O_CREAT|O_TRUNC
+-"a" O_WRONLY|O_CREAT|O_APPEND
+ 
+ int fileno(FILE *fp)
+
+ FILE *fdopen(int desc, char *mod)
+
+ apelul de citire este:
+ int read(int desc, int void *p, int lg)
+ int write(int desc, void *p, int lg)
+
+ LA EXAMEN DEPUNCTEAZA NEINCHIDEREA FISIERULUI!!!!
+
+ int close(int fd)
+
+ int dup(int desc)
+
+ myExe
+
+ int d
+
+ d=open("myError", O_WRONLY| O_CREAT | O_TRUNC)
+
+ close(2);
+
+ dup(d);
+
+ close(d);
+
+ int fcontl(int desc, int op, ...)
+ 
+ F_GETFL
+
+ FD_CLOEXEC
+
+ F_SETFD
+
+ int fd;
+ fd = fcntl(d, F_GETFD)
+
+ F_GETFL
+ F_SETFL
+ O_APPEND
+ F_DUPFD

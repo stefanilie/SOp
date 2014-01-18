@@ -1,0 +1,131 @@
+Sisteme de operare, curs 8
+==========================
+Gestiunea memoriei
+------------------
+
+un proces, casa poata fii executat, tot contxtul lui trebuie sa fie in intregime in memorie
+	
+___________________________
+|P1| P2|                  |
+|=======                  |
+|						  |
+|						  |
+|						  |
+|						  |
+|						  |
+|						  |
+|_________________________|
+
+mecanismul de swap (un fel de du-te vino intre hard (zona de sort?!) si memorie. "sacrific"-"incarc" etc)
+
+-FIFO
+-Best fit
+	>cea mai bune potrivire.
+	>daca am un proces care are sa zicem 9 pagini, si eu in memorie am o zona "contigua!?! continua" de 12
+	>imi aloca in aia de 12 dar mi fragmenteaza memoria pt ca imi lasa o zona libera de 3 "pg"
+
+-LRU last recenty used
+
+orice proces trebuie sa aiba un proces de defragmentare
+incepe sa mute procesele incarcate. "construieste" din mai multe zone libere mici, face o zona contigua mai mare.
+Baranga: "Sunt unii oameni care urasc Microsoft si iubesc Unix, si sunt oameni care iubesc Microsoft, scumpu lor Microsoft. La astia le mai spun si <Manelistii informaticii>. Sunt genul de oameni care nu stiu ca abia la XP, Microsoft a auzit de conceptul de defragmentare."
+
+Gestiunea perifericelor
+-----------------------
+a. intrare, iesire, bidirectionale
+b. human readable, machine readable
+c. -caracter
+		>unde la intrare/iesire se citeste caracter cu caracter
+   -bloc
+   		>datele se scriu/citesc pe bloc, nu octet cu octet
+   -
+Pentru perifericele human readable se va folosi FIFO
+
+Fiecarui periferic ii corespunde un modul gestionar.
+
+intrare:
+are un port de DATE si unl de STARE care memoreaza pe biti starea periferica
+corpul de stare contine in el bitul RXRDY(1 daca am apasat o tasta, 0 daca nu e apasata)
+	>daca rxready e 1, fac IN pe portul de DATE, cum am facut asta, RXRDY se face 0 si o luam de la capat.
+
+La perifericul de iesire:
+are un port de DATE, si un port de STARE.
+cel de stare are un bit TXRDY - perifericul este gata sa primeasca ce sa transmita
+trimit pe portul de date, TXRDY va fi 0 pana perifericul va "prelucra" caracterul
+
+Politica de Prolling
+--------------------
+
+Intreruperi
+-----------
+in mom in care bitul de stare care ne intereseaza, are tranzitie de la val 0 la val 1 => am primit o intrerupere.
+vine in mom cand bitul tranziteaza de la 0 la 1
+producatorul este intreruperea
+procesul consumator este programul nostru care face scanf sau ce face
+
+intrare
+-------
+IN port_date
+depune in buffer
+____________________
+programul principal citeste din buffer
+
+iesire:
+------
+programul este producator iar intreruperea devine consumator
+producatorul depune in buffer iar cnsumatorul citeste din buffer si face out pe portul de date
+
+	TXRDY?
+	nu, =>depune in buffer
+	da, =>OUT port_date
+_________________
+citeste din buffer
+OUT port_date
+
+Discuri
+-------
+Cilindrii, piste, sectoare
+
+-deplasare cap de citire
+-rotatie 
+politica fifo nu este acceptata
+
+Cererea cea mai apropiata de pozitia curenta
+
+-Tehnica ascensorului
+	tine cont de pozitie, si de directia de mutare.
+
+Fisiere
+--------
+	-Inregistrari
+		=campuri
+	-Baze de date(flat file)
+	-format fix
+	-format variabil
+
+Operatii
+--------
+1. Deschidere
+2. Exploatare
+	>a) citire
+	>b) scriere
+3. Inchidere
+
+mai sunt:
+-stergere
+-redenumire
+-copiere
+-modificare drepturi de acces
+-modificare propietar
+
+Acces fisiere:
+--------------
+=>secvential
+	>deschid fisierul si citesc inregistrarea intr-o bucla
+	>are 2 inconveniente: daca fisierul are 1000 de inregistrari si vreau sa ma duc la 500 tre sa trec prin 499 de stari
+	>de asemenea nu poate sa se duca inapoi
+
+=>aleator
+	>cu ajutorul fseek care imi permit sa schimb pozitia fara sa citesc ce e inainte/dupa el. => ma pozitionez direct pe ce vreau sa citesc, si pot sa ma duc in orice directie(inainte/inapoi)
+
+	
