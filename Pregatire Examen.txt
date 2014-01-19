@@ -22,7 +22,7 @@ int myFunct(char *f1, char *f2)
 		return -1;
 	}
 
-	while((x =fgetc(fp1)) != EOF)
+	while((x=fgetc(fp1)) != EOF)
 	{
 		if(fputc(x, fp2)==EOF)
 		{
