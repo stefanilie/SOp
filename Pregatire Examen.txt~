@@ -1,0 +1,51 @@
+(L+3*Scris)/4 <- daca nu dai oral, cand ai peste 8 in scris
+(L+s+o1+o2)/4 
+
+
+
+scrieti o functie, descrieti ce face si ce returneaza 
+
+sanse mari sa dea cu fisiere
+
+
+Exemplu de problema pe care s-ar putea sa o dea:
+
+int myFunct(char *f1, char *f2)
+{
+	FILE *fp1, fp2;
+	if((fp1 = fopen(f1, "r"))==NULL) //nu facem cu !() ci comparam cu NULL;
+		return -1;
+
+	if((fp2 = fopen(f2, "r"))==NULL) //nu facem cu !() ci comparam cu NULL;
+	{
+		fclose(fp1); //pentru ca da.
+		return -1;
+	}
+
+	while((x =fgetc(fp1)) != EOF)
+	{
+		if(fputc(x, fp2)==EOF)
+		{
+			fclose(fp1);
+			fclose(fp2);
+			return -1;
+		}
+	}
+
+	fclose(fp1);
+	fclose(fp2);
+
+	return 0
+
+
+}
+unde f1 si f2 sunt param nume unor fisiere care copiaza continutul din f1 in f2
+
+
+o fct pointer la nustiu ce care construieste un masiv, si sa returneze masivu
+
+FARA VARIABILE GLOBALE IN AFARA FUNCTIEI!!!!!1	
+ daca ne da un typedef sa il folosim
+ posibil o functie bolanda care sa nu aibe nimic in ea da' care teoretic "stii" ce contine #magie
+
+
