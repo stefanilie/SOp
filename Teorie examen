@@ -1,0 +1,180 @@
+1)Numiti 4 periferice de intrare/iesire
+	-tastatura
+	-mouse
+	-imprimanta
+	-scanner
+	
+2)Componentele Discului
+	-disc magnetic pe care sunt stocate datele
+	-capul de citire
+3)Numiti 2 tipuri de terminale
+	-xterm si vt100
+4)Numiti patru tipuri de fisiere UNIX
+	-obisnuit
+	-director
+	-tub
+	-socket
+	
+5) Scrieti o functie C int myFunct(char*dir,int inod).Functia returneaza 1 daca in directorul cu numele dat de 'dir' exista o intrare a carei caracteristici de i-nod corespunde cu inod(variabila), 0 altfel si -1 in caz de eroare.
+	#include<stdlib.h>
+	#include<stdio.h>
+	
+	int myFunc(char *dir, int inod)
+	{
+		struct dirent *file;
+		strcut stat *st;
+		while((file=readdir(dir))!=NULL)
+		{
+			if(st->st_ino == inod)
+				return 0;
+		}
+		return -1;
+	}	
+
+6) Se da o functie int extFunct(char *fn). Scrieti o functie int myFunct(long time) care pentru fiecare intrare din directorul curent cu data modificarii ulterioara lui time apeleaza functia extFunct avand ca parametru numele respectivului fisier. In caz de eroare, returneaza -1, in caz de succes, numarul de fisiere care indeplinesc conditiile date. Se considera eroare si cazul in care functia extFunct returneaza -1 pt unul din fisiere.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+242
+1. 2 sisteme de gestiune de tip client-server, ceva de genul era enuntul
+2. algoritmul de criptare decriptare care foloseste chei publice
+3. drepturile de acces ale unui fisier
+4. nu mai tin minte cum era exact, era ceva cu o secventa de biti si se dadea un vector buf[4] si trebuia dupa 2 instructiuni sa spui ce se afla in buf; instructiunile alea erau: lseek(fd,SEEK_SET,3); read(fd,buf,4); fd era descriptorul fisierului in care era secventa
+5. Sa se scrie o functie C char* myFunct(int *fd,int n,int m), fd vectori de descriptori pentru n fisiere... si din fiecare fisier lua primele m caractere si le salva intr-un vector pe care-l returna
+6. int myFunct(int *pid, int n, int sig) sa se pună semnalul sig pe vectorul pid, se făcea cu kill(pid[i],sig) intr'un for, returna 0 la succes si -1 eroare
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+243:
+1. Comanda unix care arata spatiul liber pe un disc (doar comanda fara optiuni)
+2. Comanda unix care afiseaza toate fisierele cu extensia .c
+3. Avantajele sistemelor multimedia
+4. Exemplu de sisteme multimedia si sistem ce nu e multimedia
+5. Scrieti o fct C int *myFunct(int fd, int n, int m) care citeste din fisierul cu descriptorul fd n octeti si intoarce un vector cu m elemente ce retine pe fiecare pozitie numarul de elemente din vector congruente cu pozitia modulo m
+6. Scrieti o fct C int myFunct(void *p, void *p1, int lg, int semid) care sa copieze continutul de lungime lg din p1 in p in mod semaforizat de semaforul de tip mutex cu indicatorul semid
+int myFunct(void *p, void *p1, int lg, int semid)
+{
+struct sembuf sb;
+sb.sem_num=0;
+sb.sem_op=-1;
+sb.sem_flg=0;
+if(semop(id,&sb,1)<0)
+return -1;
+if(memcpy(p,p1,lg)==NULL)return -1;
+sb.sem_op=1;
+if(semop(id,&sb,1)<0)
+return -1;
+return 0;
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+SO. Subiecte oral grupa 241 - 5.02.2013
+
+- terminale (clasificare)
+- apeluri de sistem
+- deadlock
+- ceasuri
+- memorie virtuala
+- rolul ceasurilor in sisteme de operare
+- functionalitati sisteme de operare
+- sisteme multimedia
+- prioritatea proceselor
+- prioritatea operatiilor pe disc
+- fisiere
+- segmentarea memoriei
+- principiile softului I/E
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+SO. Subiecte oral grupa 244 - 4.02.2013
+
+- rol deadlock
+- program care sa citeasca un sir de caractere si sa transforme literele mari in mici si invers (fara strlen() etc - doar c)
+- functionalitati sisteme de operare
+- virusi
+- clasificare apeluri sistem
+- clasificare terminale
+- sisteme de operare multimedia (+ ex de unul care e si unul care nu e)
+- functionalitatile sist de operare
+- memorie virtuala
+- (problema scris) daca memoria e de 32 biti. cate pagini de 8 kilobiti se pot umple (sper ca e bine - pt mai multe detalii intrebati-l pe Victor)
+- sisteme de fisiere
+- RPC
+- segmentarea memoriei
+- integrated environment
+- planificare procese
+- planificare operatii pe disc
+- sisteme multiprocesor
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+în 2010-2011
+
+ 
+
+1. Se consideră definiția de mai jos. Scrieți o funcție C MYSTR *myFunct(char *dir, int *n) care construiește un vector de structuri `MYSTR` ce conțin fiecare numele fișierelor și caracteristicile i-nodurilor din directorul cu numele `dir`. `n` comtinre (sic) numărul de elemente din `vec`. Se întoarce `NULL` în caz de eroare. (in `n` se va afla numarul de fisiere. Tu trebuie sa il aflii, nu iti este dat.)
+
+ 
+
+typedef struct { char name[NAME_MAX]; struct stat st; } MYSTR;
+
+ 
+
+2. Scrieți o funcție C double myFunct(char *f, double *vec, int n, int *err) unde `f` este numele unui fișier ce conține în format binar elemente de tip double, iar `n` numărul de elemente din `vec`. Funcția returnează produsul scalar dintre `vec` și vectorul format din primele `n` elemente din `f`. Dacă sunt mai puțin de `n` elemente în `f`, atunci elementele lipsă vor fi considerate ca având valoarea `0.0`. `err` este parametru de ieșire și va avea valoarea `0` în caz de success și `-1` în caz de eroare.
+
+ 
+
+Mai vechi:
+
+    Scrieti o functie C sub forma int myFunct(int *tab, int n), unde tab este o lista de identificatori a n procese fiu. Functia asteapta terminarea tuturor proceselor din tabela. Daca cel putin un proces nu s-a terminat, atunci se returneaza -1. Daca toate procesele s-au terminat, se returneaza media aritmetica a codurilor de retur.
+    Scrieti o functie C sub forma int myFunct(int id, (int *)f(), int *ret) unde id e identificatorul unui semafor, care apeleaza semaforizat functia desemnata de f (inainte de apel semaforul se decrementeaza si dupa apel semaforul se incrementeaza). La adresa desemnata de ret se va depune codul de returl al functiei f. Se lucreaza doar cu primul semafor din vector. myFunct returneaza 0 in caz de succes sau -1 in caz de eroare.
+
+    Scrieti o functie C char *myFunct ( char *fis, int *n ) care intoarce adresa unei zone de memorie unde s-au depus toate vocalele din fisierul cu numele fis. La adresa memorata de n se va depune lungimea zonei de memorie returnate. In caz de eroare se va returna NULL.
+    Scrieti o functie C int myFunct ( int *tab, int n, (void *)funct( int x ), int val ) care lanseaza un proces fiu care mai intai mascheaza semnalele din vectorul tab, ce are lungime n si apoi va executa functia desemnata de funct cu argumentul val. Se va returna -1 in caz de eroare sau daca procesul fiu nu s-a terminat normal si 0 altfel.
+    int myFunct(int* pid, int*sig, int n) unde tablourile pis si sig au fiecare n elem. Fctia transmite fiecarui proces din pis semnalul coresp din sig. Se va intoarce 0 in caz de succes si -1 caz de eroare.
+    int myFunct(char**fin,char*fout,int n, int k) unde fin este un vector de n nume de fisiere. In fisierul cu numele dat de fout se va scrie al k-lea caracter din fiecare fisier cu numele dat de intrarile din fin. Se va intoarce 0 in caz de succes, -1 eroare.
+    int myFunct(char *buf,int fd, int *poz), unde df este ID-ul unui fisier din descriptorul de fisiere al programului. Se citeste din fisier caracter si se pune in buf pe pozitia *poz, dupa care se incrementeaza circular *poz; returneaza 0 respectiv -1 daca a terminat cu success respectiv a dat de o eroare.
+    int myFunct(char *f1, char *f2, int m, int n) Se iau caracterele din fisierul f1 dintre pozitiile m si n si se pun la sfarsitul lui f2 (daca nu exista se creaza), se pun numai litere si cifre, restul caracterelor se sar; returneaza -1 in caz de eroare sau numarul de caractere puse in f2 in caz de succes.
+    sa se scrie o functie int myFunc(key_ t cheie) care sa transforme literele mici in litere mari si invers, din stringul de la inceputul segmentului de memorie desemnat de "cheie"
+    sa se scrie o functie myFunc(char *f, char *s) care returneaza - 1 in caz de eroare, 1 daca primele caractere din fisierul f coincid cu cele din stringul s, si 0 altfel (asadar la problema asta trebuia sa verifici daca sirul de caractere s se gaseste la inceputul continutului fisierului desemnat de "f")
+    o functie C care primea ca parametru id-ul lui vector de semafoare de tip mutex , un pointer la char si un pointer la functie. trebuia sa punem semaforul pe 0, sa apelam functia pointata de al 3-lea parametru avand ca parametru pointerul la char si sa punem semaforul pe 1. succes return 0 , esec return -1
+    o functie int myStack(int *a,int max,int *n,int *val,int oper) care trebuia sa simuleze o stiva , a fiind adresa primului element din stiva, max numarul maxim de elemente pe care le poate avea stiva, n numarul curent de elemente si daca oper era 0 trebuia sa punem in stiva valoarea de la adresa val si daca era 1 sa extragem din stiva la adresa val. succes return 0, esec return -1
+    scrieri o functie int *myFunct(int *n) care asteapta terminarea tuturor celor proceselor fiu, pune intr-un vector pid-urile acestora si returneaza adresa acestuia. de asemenea *n va retine numarul de procese fiu
+    Scrieti o functie void myHand(int sig) care va instala handlerul de N ori(N definit cu #define) si la sfarsit instaleaza handlerul implicit. 
+    Scrieti o functie c: int funct(char* f1, char* f2, int m, int n) f1, f2: nume de fisiere, care copiaza de la pozitia m pana la pozitia n din fisierul f1 in fisierul f2 (pe care mi se pare ca il si creeaza). Returneaza 0 in caz de succes, -1 in caz de eroare. Atentie la parametri incorecti.
+    Scrieti o functie C: char *myfunct(int *p, char c), unde p este vector de 2 descriptori deschisi, asociati unui tub p[0] in citire si p[1] in scriere, care transmite pe tub caracterul c si citeste din tub un mesaj alcatuit astfel: primul caracter este lungimea mesajului urmand informatia (aici nu stiu exact oricum era ceva de genul: mesajul abc->3abc). Mesajul se depune in memorie si se returneaza adresa la care a fost depus. In caz de insucces, returneaza NULL.
+    Scrieti o functie C: int myfunct(int *pid, int *sig, int n), unde vectorii pid si sig au acelasi numar de elemente, si anume n. Se vatransmite fiecarui proces indentificat de elemntele lui pid semnalul corespunzator indentificat de elementul din sig. Functia returneaza 0 in caz de succes si valoarea lui errno in caz de eroare.
+    Scrieti o functie c: int funct(char* f1, char* f2, char *f3, char *fout) - parametrii sunt nume de fisiere - care face o interclasare intre f1,f2,f3 in fout astfel caracter din f1 caracter din f2 caracter din f3 caracter din f1 caracter din f2 caracter din f3 etc returneaza 0 in caz de succes, -1 in caz de eroare
+    Scrieti o functie c int funct(char* f, char *word), f nume de fisier care cauta in f cuvantul de lungime minima si il pune in word; returneaza -1 in caz de eroare si pozitia in fisier a cuvantului de lungime minim altfel.
+
+
+
+
+Din ciclu' "Cultiveaza-te bă!", runda 2: 
+Văd că data trecută nu am reușit să ne organiză, poate pentru că nu am insistat și eu destul.  
+Așadar, și prin urmare, de data asta vin cu 2 spectacole, ambele la Teatrul Mic: 
+
+http://www.eventim.ro/ro/bilete/primavara-doamnei-stone-la-roma-bucuresti-teatrul-mic-314249/event.html
+
+http://www.eventim.ro/ro/bilete/baietii-de-aur-bucuresti-teatrul-mic-314231/event.html
+
+Aștept răspuns până Duminică seară. Luni ne vedem să iau carnetele să fac rost de bilete :)
+
+
+
+
+
+
+
+
+
+
+
+
