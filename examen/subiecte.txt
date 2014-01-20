@@ -1,0 +1,57 @@
+﻿241 :
+
+1)Numiti 4 periferice de intrare/iesire
+
+2)Componentele Discului
+
+3)Numiti 2 tipuri de terminale 
+
+4)Numiti patru tipuri de fisiere UNIX 
+
+5) Scrieti o functie C int myFunct(char*dir,int inod).
+Functia returneaza 1 daca in directorul cu numele dat
+ de 'dir' exista o intrare a carei caracteristici de 
+i-nod corespunde cu inod(variabila), 0 altfel si -1 in
+ caz de eroare.
+
+‎6) Se da o functie int extFunct(char *fn). Scrieti
+ o functie int myFunct(long time) care pentru fiecare 
+intrare din directorul curent cu data modificarii 
+ulterioara lui time apeleaza functia extFunct avand 
+ca parametru numele respectivului fisier. In caz 
+de eroare, returneaza -1, in caz de succes, numarul 
+de fisiere care indeplinesc conditiile date. 
+Se considera eroare si cazul in care functia 
+extFunct returneaza -1 pt unul din fisiere.
+
+
+
+242 :
+1. 2 sisteme de gestiune de tip client-server, ceva de genul era enuntul
+2. algoritmul de criptare decriptare care foloseste chei publice
+3. drepturile de acces ale unui fisier
+4. nu mai tin minte cum era exact, era ceva cu o secventa de biti si se dadea un vector buf[4] si trebuia dupa 2 instructiuni sa spui ce se afla in buf; instructiunile alea erau: lseek(fd,SEEK_SET,3); read(fd,buf,4); fd era descriptorul fisierului in care era secventa
+5. Sa se scrie o functie C char* myFunct(int *fd,int n,int m), fd vectori de descriptori pentru n fisiere... si din fiecare fisier lua primele m caractere si le salva intr-un vector pe care-l returna
+6. int myFunct(int *pid, int n, int sig) sa se pună semnalul sig pe vectorul pid, se făcea cu kill(pid[i],sig) intr'un for, returna 0 la succes si -1 eroare
+
+243:
+1. Comanda unix care arata spatiul liber pe un disc (doar comanda fara optiuni)
+2. Comanda unix care afiseaza toate fisierele cu extensia .c
+3. Avantajele sistemelor multimedia
+4. Exemplu de sisteme multimedia si sistem ce nu e multimedia
+5. Scrieti o fct C int *myFunct(int fd, int n, int m) care citeste din fisierul cu descriptorul fd n octeti si intoarce un vector cu m elemente ce retine pe fiecare pozitie numarul de elemente din vector congruente cu pozitia modulo m
+6. Scrieti o fct C int myFunct(void *p, void *p1, int lg, int semid) care sa copieze continutul de lungime lg din p1 in p in mod semaforizat de semaforul de tip mutex cu indicatorul semid
+int myFunct(void *p, void *p1, int lg, int semid)
+{
+struct sembuf sb;
+sb.sem_num=0;
+sb.sem_op=-1;
+sb.sem_flg=0;
+if(semop(id,&sb,1)<0)
+return -1;
+if(memcpy(p,p1,lg)==NULL)return -1;
+sb.sem_op=1;
+if(semop(id,&sb,1)<0)
+return -1;
+return 0;
+}
